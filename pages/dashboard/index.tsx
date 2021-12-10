@@ -1,22 +1,18 @@
-import { useUser } from '@/utils/contexts/useUser';
-import withPageAuthRequired from '@/utils/withPageAuthRequired';
-import ProfileDropdown from '@/common/ProfileDropdown';
+import DashboardLayout from "@/layouts/DashboardLayout";
+import { useUser } from "@/utils/contexts/useUser";
+import withPageAuthRequired from "@/utils/withPageAuthRequired";
 
 const Page = () => {
   const { isLoading, user } = useUser();
-  const { email } = user;
   console.log(isLoading, user);
-
   return (
-    <div className='min-h-screen text-white bg-black'>
-      Dashboard {email}
-      <ProfileDropdown />
-      <main>
-        <input className='text-black' type='text' />
-        <button>New site</button>
-        <div></div>
-      </main>
-    </div>
+    <DashboardLayout
+      page='setup'
+      heading='Channel name'
+      description='Description of the youtube channel goes here'
+    >
+      {isLoading}
+    </DashboardLayout>
   );
 };
 
