@@ -1,17 +1,29 @@
 import { useUser } from '@/utils/contexts/useUser';
 import withPageAuthRequired from '@/utils/withPageAuthRequired';
-import ProfileDropdown from '@/common/ProfileDropdown';
-import Logo from '@/common/Logo';
 import Navbar from 'components/pages/dashboard/Navbar';
 import Link from 'next/link';
 import Modal from '@/common/Modal';
 import { useState } from 'react';
 import AddChannel from 'components/forms/AddChannel';
+import supabase from 'libs/supabase';
+import { Channel } from '@/utils/types';
+import ChannelCard from '@/common/ChannelCard';
 
 const Page = () => {
   const { isLoading, user } = useUser();
   const { email, user_metadata } = user;
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [channels, setChannels] = useState<Channel[] | null>([]);
+  const [isChannelLoading, setIsChannelLoading] = useState(false);
+  const fetchData = async () => {
+    const { data: channelsData, error: channelsError } = await supabase
+      .from('channels')
+      .select('*')
+      .eq('created_by', user.id)
+      .order('created_at', { ascending: false });
+    setChannels(channelsData);
+  };
+  fetchData();
   return (
     <div className='min-h-screen text-white bg-black'>
       <Navbar />
@@ -35,18 +47,15 @@ const Page = () => {
             </button>
           </div>
           <div className='mt-20'>
-            <Link href='#'>
-              <a>
-                <div className='w-full max-w-sm px-5 py-3 border border-gray-700 rounded group'>
-                  <h3 className='mt-3 mb-4 text-2xl font-bold text-gray-400 group-hover:text-gray-100'>
-                    Fireship
-                  </h3>
-                  <p className='mb-3 text-gray-500 group-hover:text-gray-400'>
-                    https://youtube.com/fireship
-                  </p>
-                </div>
-              </a>
-            </Link>
+            {channels && channels.length > 0 && !isChannelLoading ? (
+              channels.map((channel) => (
+                <ChannelCard channel={channel} key={channel.id} />
+              ))
+            ) : (
+              <ul className='list-none'>
+                {isLoading ? 'Loading' : 'Not found'}
+              </ul>
+            )}
           </div>
         </main>
       </div>
