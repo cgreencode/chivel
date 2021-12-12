@@ -34,7 +34,6 @@ const uploadImage = async (files, id) => {
   }
   toast.error('Error occured');
   return;
-  console.log(data, error);
 };
 
 export default uploadImage;
