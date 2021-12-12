@@ -9,19 +9,16 @@ interface ButtonProps
   > {
   children?: React.ReactNode;
   loading?: boolean;
-  className?: string;
 }
 export default function Button({
   children,
   loading = false,
-  className,
   ...props
 }: ButtonProps) {
   return (
     <button
       className={
-        className +
-        ' bg-green-600 px-4 py-2 hover:bg-green-700 rounded mt-2 text-white flex items-center gap-1 ' +
+        'bg-green-600 px-4 py-2 hover:bg-green-700 rounded mt-2 text-white flex items-center gap-1 ' +
         (loading ? 'opacity-50 cursor-not-allowed' : '')
       }
       disabled={loading || props.disabled}
