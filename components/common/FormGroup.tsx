@@ -30,8 +30,7 @@ const FormGroup = ({
           onBlur={formik.handleBlur}
           value={formik.values[id]}
           id={id}
-          className='input'
-          rows={15}
+          className='rounded'
         />
       ) : (
         <>
