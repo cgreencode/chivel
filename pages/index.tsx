@@ -1,19 +1,22 @@
-import AppLayout from '@/layouts/AppLayout';
-import { useUser } from '@/utils/contexts/useUser';
-import type { NextPage } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import AppLayout from "@/layouts/AppLayout";
+import { useUser } from "@/utils/contexts/useUser";
+import type { NextPage } from "next";
+import Link from "next/link";
 
 const Home: NextPage = () => {
-  const { user } = useUser();
-  const router = useRouter();
-  user && router.push('/dashboard');
+  const { user, signOut } = useUser();
   return (
     <AppLayout>
       <div className='pt-32 text-6xl font-black text-center font-cal'>
         <h1>
           Create a stunning landing page <br /> for your Youtube channel
           <br />
+          {user && (
+            <span>
+              {user.email}
+              <button onClick={signOut}>Logout</button>
+            </span>
+          )}
         </h1>
         <span className='text-transparent opacity-80 bg-clip-text bg-gradient-to-r from-yellow-300 via-purple-300 to-blue-500'>
           in seconds.
