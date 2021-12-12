@@ -8,6 +8,7 @@ const Setup = () => {
   const router = useRouter();
   const { id } = router.query;
   const [navLinks, setNavLinks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchLinks();
@@ -24,6 +25,7 @@ const Setup = () => {
     } else {
       console.log(error);
     }
+    setLoading(false);
   };
 
   const onSubmit = async (e: BaseSyntheticEvent) => {
@@ -52,6 +54,8 @@ const Setup = () => {
       description='Edit the links in the navbar of your site. You should be adding them because [it matters](https://www.readyartwork.com/5-reasons-navigation-important/). A lot.'
       page='navbar'>
       <form onSubmit={onSubmit}>
+        {loading && <div>Loading...</div>}
+        {!loading && !navLinks && <div>No links added</div>}
         {navLinks.map((link, index) => {
           const [text, url] = link.split('||');
           return (
