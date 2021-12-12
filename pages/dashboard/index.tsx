@@ -1,9 +1,8 @@
 import { useUser } from '@/utils/contexts/useUser';
 import withPageAuthRequired from '@/utils/withPageAuthRequired';
 import Navbar from 'components/pages/dashboard/Navbar';
-import Link from 'next/link';
 import Modal from '@/common/Modal';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddChannel from 'components/forms/AddChannel';
 import supabase from 'libs/supabase';
 import { Channel } from '@/utils/types';
@@ -13,22 +12,22 @@ const Page = () => {
   const { isLoading, user } = useUser();
   const { email, user_metadata } = user;
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isChannelLoading, setIsChannelLoading] = useState(false);
-
   const [channels, setChannels] = useState<Channel[] | null>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-  async function fetchPosts() {
-    const { data, error } = await supabase
+  const [isChannelLoading, setIsChannelLoading] = useState(false);
+  const fetchData = async () => {
+    setIsChannelLoading(true);
+    const { data: channelsData, error: channelsError } = await supabase
       .from('channels')
       .select('*')
       .eq('created_by', user.id)
       .order('created_at', { ascending: false });
-    setChannels(data);
-    setLoading(false);
-  }
+    setChannels(channelsData);
+    setIsChannelLoading(false);
+  };
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className='min-h-screen text-white bg-black'>
       <Navbar />
@@ -53,12 +52,14 @@ const Page = () => {
           </div>
           <div className='mt-20'>
             {channels &&
-              channels?.length > 0 &&
+              channels.length > 0 &&
               channels.map((channel) => (
                 <ChannelCard channel={channel} key={channel.id} />
               ))}
-            {loading && <div>Loading...</div>}
-            {!channels?.length && !loading && <div>No channels found</div>}
+            {isChannelLoading && <div>Loading...</div>}
+            {!isChannelLoading && channels && channels.length === 0 && (
+              <div>No Data Found</div>
+            )}
           </div>
         </main>
       </div>
