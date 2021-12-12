@@ -2,12 +2,11 @@ import { FormikProps } from 'formik';
 import { type } from 'os';
 import { HTMLInputTypeAttribute } from 'react';
 
-interface Props
-  extends React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+interface Props extends React.HTMLAttributes<HTMLInputElement> {
   formik: FormikProps<any>;
   id: string;
   helperText?: React.ReactNode;
-  label?: React.ReactNode;
+  label: string;
   type?: HTMLInputTypeAttribute;
   isTextarea?: boolean;
 }
@@ -22,25 +21,17 @@ const FormGroup = ({
 }: Props) => {
   return (
     <div className={` flex-col flex gap-2`}>
-      {label && (
-        <label htmlFor='channelId' className='font-bold'>
-          {label}
-        </label>
-      )}
+      <label htmlFor='channelId' className='font-bold'>
+        {label}
+      </label>
       {isTextarea ? (
         <textarea
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values[id]}
           id={id}
-          className={
-            'input ' +
-            (formik.touched[id] && formik.errors[id] ? 'error' : '') +
-            ' ' +
-            props.className
-          }
+          className='input'
           rows={15}
-          placeholder={props.placeholder}
         />
       ) : (
         <>

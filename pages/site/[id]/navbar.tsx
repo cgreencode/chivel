@@ -1,5 +1,4 @@
 import DashboardLayout from '@/layouts/DashboardLayout';
-import Button from '@/ui/Button';
 import supabase from 'libs/supabase';
 import { useRouter } from 'next/router';
 import { BaseSyntheticEvent, useEffect, useState } from 'react';
@@ -10,10 +9,10 @@ const Setup = () => {
   const { id } = router.query;
   const [navLinks, setNavLinks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetchLinks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchLinks = async () => {
@@ -32,7 +31,6 @@ const Setup = () => {
 
   const onSubmit = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
-    setUpdating(true);
     const { data, error } = await supabase
       .from('channels')
       .update({ navbarLinks: navLinks })
@@ -46,7 +44,6 @@ const Setup = () => {
       console.log(error);
       toast.error('Error occured');
     }
-    setUpdating(false);
   };
 
   useEffect(() => {
@@ -112,12 +109,11 @@ const Setup = () => {
             className='w-full bg-gray-50 hover:bg-gray-800 text-black hover:text-white py-2 rounded mt-6'>
             Add Link
           </button>
-          <Button
-            className='bg-green-500 hover:bg-green-700  text-white w-full py-2 rounded mt-4'
-            type='submit'
-            loading={updating}>
+          <button
+            className='bg-green-500 hover:bg-green-700 text-white w-full py-2 rounded mt-4'
+            type='submit'>
             Save
-          </Button>
+          </button>
         </div>
       </form>
     </DashboardLayout>
