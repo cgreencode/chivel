@@ -29,7 +29,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         }}
         twitter={{
           cardType: 'summary_large_image',
-          handle: '@lalitcodes',
         }}
       />
       {process.env.NODE_ENV === 'production' && (
